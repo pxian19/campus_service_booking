@@ -49,6 +49,50 @@ class Service(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.service_type.name})"
+    
+    # Generate time slots for this service based on its type
+    # Auto-generate time slots for the next 7 days depending on service type
+    def generate_weekly_slots(self):
+        from datetime import date, time, timedelta
+
+        # Build a list of dates for the next 7 days (including today)
+        today = date.today()
+        week_dates = [today + timedelta(days=i) for i in range(7)]
+
+        if self.service_type.name in ['Library', 'Study Room']:
+            dates = week_dates
+            start_hour, end_hour, interval = 8, 22, 30
+        elif self.service_type.name == 'Repair':
+            # Weekdays only (Mon-Fri)
+            dates = [d for d in week_dates if d.weekday() < 5]
+            start_hour, end_hour, interval = 9, 18, 30
+        else:
+            # Counselling & Tutor: staff will create slots manually via admin / staff pages
+            return 
+
+        # Loop through each date and create slots in fixed intervals
+        for d in dates:
+            hour, minute = start_hour, 0
+            while hour < end_hour:
+                s = time(hour, minute)
+                end_min = minute + interval
+                end_h = hour
+                if end_min == 60:
+                    end_min = 0
+                    end_h += 1
+                e = time(end_h, end_min)
+                
+                # Create slot if it doesn't exist
+                TimeSlot.objects.get_or_create(
+                    service=self, date=d,
+                    start_time=s, end_time=e,
+                )
+                
+                # Move to the next slot
+                minute += interval
+                if minute == 60:
+                    minute = 0
+                    hour += 1
 
 
 class TimeSlot(models.Model):
