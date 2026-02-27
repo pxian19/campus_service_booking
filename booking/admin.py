@@ -11,8 +11,15 @@ class UserAdmin(BaseUserAdmin):
     )
 
 
+# TimeSlot admin with filtering and search
+class TimeSlotAdmin(admin.ModelAdmin):
+    list_display = ('service', 'date', 'start_time', 'end_time', 'is_available')
+    list_filter = ('service__service_type', 'service', 'date')
+    ordering = ('service', 'date', 'start_time')
+    
+
 admin.site.register(User, UserAdmin)
 admin.site.register(ServiceType)
 admin.site.register(Service)
-admin.site.register(TimeSlot)
+admin.site.register(TimeSlot, TimeSlotAdmin)
 admin.site.register(Booking)
