@@ -1,0 +1,17 @@
+{% extends "booking/base.html" %}
+
+{% block content %}
+<h1>Available Time Slots for {{ service.name }}</h1>
+
+<ul>
+{% for slot in slots %}
+<li>
+{{ slot.date }} | {{ slot.start_time }} - {{ slot.end_time }}
+<a href="/book/{{ slot.id }}/">BOOK</a>
+</li>
+{% empty %}
+<li>No slots available.</li>
+{% endfor %}
+</ul>
+
+{% endblock %}

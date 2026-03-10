@@ -1,0 +1,20 @@
+{% extends "booking/base.html" %}
+
+{% block content %}
+
+<h1>Available Services</h1>
+
+<ul>
+    {% for service in services %}
+    <li>
+        <a href="/services/{{ service.id }}/slots/">
+        <strong>{{ service.name }}</strong>
+        </a>
+         — {{ service.location }}
+        </li>
+    {% empty %}
+        <li>No services available.</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

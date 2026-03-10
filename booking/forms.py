@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import User
+from .models import User, Booking, TimeSlot
 
 
 class RegisterForm(UserCreationForm):
@@ -33,6 +33,35 @@ class RegisterForm(UserCreationForm):
 
 
 # Login form using email and password
+
+
+from django.utils import timezone
 class LoginForm(forms.Form):
     email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput)
+
+
+class BookingForm(forms.ModelForm):
+    class Meta:
+        model = Booking
+        fields = ['notes']
+
+
+class TimeSlotForm(forms.ModelForm):
+    class Meta:
+        model = TimeSlot
+        fields = ['service', 'date', 'start_time', 'end_time']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        date = cleaned_data.get('date')
+        start_time = cleaned_data.get('start_time')
+        end_time = cleaned_data.get('end_time')
+
+        if start_time and end_time and start_time >= end_time:
+            raise forms.ValidationError("End time must be after start time.")
+
+        if date and date < timezone.now().date():
+            raise forms.ValidationError("You cannot create a time slot in the past.")
+
+        return cleaned_data

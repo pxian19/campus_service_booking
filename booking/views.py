@@ -1,9 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import RegisterForm, LoginForm
-
+from .forms import RegisterForm, LoginForm, BookingForm, TimeSlotForm
+from .models import Service, TimeSlot, Booking
 
 # Register a new user account (student/staff), then log them in
 def register_view(request):
@@ -60,5 +60,56 @@ def logout_view(request):
 def home_view(request):
     if request.user.role == 'staff':
         return render(request, 'booking/staff_home.html')
-    
+
     return render(request, 'booking/student_home.html')
+
+
+@login_required
+def service_list_view(request):
+    services = Service.objects.filter(is_active=True)
+    return render(request, 'booking/service_list.html', {
+        'services': services
+    })
+@login_required
+def slot_list_view(request, service_id):
+    service = Service.objects.get(id=service_id)
+    slots = TimeSlot.objects.filter(service=service, is_available=True)
+
+    return render(
+        request,
+        'booking/slot_list.html',
+        {
+            'service': service,
+            'slots': slots
+        }
+    )
+@login_required
+def create_booking_view(request, slot_id):
+    slot = TimeSlot.objects.get(id=slot_id)
+
+    if not slot.is_available:
+        messages.error(request, 'This slot is no longer available.')
+        return redirect('slot_list', service_id=slot.service.id)
+
+    existing_booking = Booking.objects.filter(
+        user=request.user,
+        time_slot=slot,
+        status='confirmed'
+    ).exists()
+
+    if existing_booking:
+        messages.error(request, 'You have already booked this slot.')
+        return redirect('slot_list', service_id=slot.service.id)
+
+    booking = Booking.objects.create(
+        user=request.user,
+        time_slot=slot,
+        status='confirmed'
+    )
+
+    slot.is_available = False
+    slot.save()
+
+    return render(request, 'booking/booking_confirm.html', {
+        'booking': booking
+    })

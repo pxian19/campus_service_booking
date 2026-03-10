@@ -1,0 +1,15 @@
+{% extends "booking/base.html" %}
+
+{% block content %}
+<h1>Booking Confirmed</h1>
+
+<p>Your booking has been created successfully.</p>
+
+<p>
+    {{ booking.time_slot.service.name }} |
+    {{ booking.time_slot.date }} |
+    {{ booking.time_slot.start_time }} - {{ booking.time_slot.end_time }}
+</p>
+
+<a href="/services/">Back to services</a>
+{% endblock %}

@@ -11,4 +11,7 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     # User logout
     path('logout/', views.logout_view, name='logout'),
+    path('services/', views.service_list_view, name='service_list'),
+    path('services/<int:service_id>/slots/', views.slot_list_view, name='slot_list'),
+    path('book/<int:slot_id>/', views.create_booking_view, name='create_booking'),
 ]
