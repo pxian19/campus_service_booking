@@ -1,12 +1,90 @@
 {% extends 'booking/base.html' %}
 
+{% block title %}Register - Campus Service Booking{% endblock %}
+
 {% block content %}
-<!-- Registration form -->
-<h2>Register</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Register</button>
-</form>
-<p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+<div class="row justify-content-center align-items-center" style="min-height: 85vh;">
+    <div class="col-12 col-md-8 col-lg-6"> <div class="card shadow-sm border-0 rounded-3">
+            <div class="card-body p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <img src="{% static 'booking/images/uofg-logo.png' %}" alt="UofG Logo" height="50" class="mb-3">
+                    <h2 class="h4 fw-bold mb-3" style="color: var(--uofg-blue);">Create an Account</h2>
+                    <p class="text-muted small">Join the Campus Service Booking platform</p>
+                </div>
+                
+                <div class="text-center mb-4">
+                    <h2 class="h4 fw-bold text-uofg mb-3">Create an Account</h2>
+                    <p class="text-muted small">Join the Campus Service Booking platform</p>
+                </div>
+
+                <form method="post" action="{% url 'register' %}">
+                    {% csrf_token %}
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="firstName" class="form-label fw-semibold">First Name</label>
+                            <input type="text" name="first_name" id="firstName" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mt-3 mt-md-0">
+                            <label for="lastName" class="form-label fw-semibold">Last Name</label>
+                            <input type="text" name="last_name" id="lastName" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label fw-semibold">University Email</label>
+                        <input type="email" name="username" id="email" class="form-control" placeholder="e.g. 1234567x@student.gla.ac.uk" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label fw-semibold">Password</label>
+                        <div class="input-group">
+                            <input type="password" name="password" id="password" class="form-control" required>
+                            <button class="btn btn-outline-secondary" type="button" id="toggleRegPassword">Show</button>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="role" class="form-label fw-semibold">I am a...</label>
+                        <select name="role" id="role" class="form-select" required>
+                            <option value="" disabled selected>Select your role</option>
+                            <option value="student">Student</option>
+                            <option value="staff">Staff Member</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-uofg w-100 py-2 mb-3 fs-5">Register</button>
+                </form>
+
+                <hr class="my-4">
+
+                <div class="text-center">
+                    <p class="small mb-0">Already have an account? 
+                        <a href="{% url 'login' %}" class="text-decoration-none fw-bold" style="color: var(--uofg-blue);">Log in here</a>
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.body.classList.add('login-body');
+        document.querySelectorAll('.card').forEach(card => {
+            card.classList.add('login-card');
+            card.classList.replace('shadow-sm', 'shadow-lg'); 
+        });
+
+        const toggleBtn = document.querySelector('#toggleRegPassword');
+        const passInput = document.querySelector('#password');
+
+        toggleBtn.addEventListener('click', function () {
+            const type = passInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passInput.setAttribute('type', type);
+            this.textContent = type === 'password' ? 'Show' : 'Hide';
+        });
+    });
+</script>
 {% endblock %}

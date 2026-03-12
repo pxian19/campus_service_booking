@@ -76,9 +76,9 @@ WSGI_APPLICATION = 'campus_service_booking.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'campus_service_booking',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
+        'NAME': 'campus_service',
+        'USER': 'snowsnow',
+        'PASSWORD': '',
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -119,7 +119,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL ='static/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / "booking" / "static"
+]
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

@@ -1,0 +1,82 @@
+* --- Global Variables --- */
+:root {
+    /* Precise UofG Brand Blue from screenshot */
+    --uofg-blue: #002b5c;
+    --uofg-hover-light: rgba(255, 255, 255, 0.1); 
+    --uofg-light-gray: #f8f9fa;
+}
+
+.text-uofg {
+    color: var(--uofg-blue) !important; 
+}
+
+/* --- Navigation Styling --- */
+/* Custom background using official hex color */
+.bg-uofg {
+    background-color: var(--uofg-blue) !important;
+    color: #ffffff !important;
+    padding: 10px 20px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.btn-uofg:hover {
+    background-color: #003a7d !important;
+    color: #ffffff !important;              
+}
+
+/* Ensure high contrast for accessibility (WCAG 1.4.3) */
+.navbar-dark .navbar-nav .nav-link {
+    color: #ffffff !important;
+    padding: 10px 15px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Simple hover effect for user feedback */
+.navbar-dark .navbar-nav .nav-link:hover {
+    background-color: var(--uofg-hover-light) !important; 
+    color: #ffffff !important; 
+    border-radius: 4px; 
+}
+
+/* --- Common Components (For future pages) --- */
+
+/* Standardized card style for Browse Services (M2) */
+.service-card {
+    border: none;
+    border-radius: 8px;
+    background-color: #ffffff;
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Polished hover effect - part of 'Look and Feel' requirement */
+.service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* Buttons using university branding */
+.btn-uofg {
+    background-color: var(--uofg-blue);
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.btn-uofg:hover {
+    background-color: #003a7d !important;
+    color: #ffffff;
+}
+
+.login-body {
+    background-color: var(--uofg-blue);
+    background-image: linear-gradient(rgba(0, 43, 92, 0.5), rgba(0, 43, 92, 0.5)), 
+                      url('../images/uofg-campus.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    height: 100vh;
+}
