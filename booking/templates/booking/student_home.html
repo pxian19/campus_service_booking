@@ -7,7 +7,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
         <h2 class="fw-bold" style="color: var(--uofg-blue);">Student Portal</h2>
         <div>
-            <a href="#" class="btn btn-outline-secondary btn-sm me-2">My Bookings</a>
+            <a href="{% url 'my_bookings' %}" class="btn btn-outline-secondary btn-sm me-2">My Bookings</a>
             <a href="{% url 'logout' %}" class="btn btn-outline-danger btn-sm">Logout</a>
         </div>
     </div>
@@ -23,7 +23,7 @@
                         <div class="fs-1">📖</div>
                     </div>
                     <h3 class="card-title fw-bold mb-4" style="color: var(--uofg-blue);">Library</h3>
-                    <a href="#" class="btn btn-uofg px-4">view availability</a>
+                    <a href="{% url 'slot_list' 10 %}" class="btn btn-uofg px-4">view availability</a>
                 </div>
             </div>
         </div>
@@ -35,7 +35,7 @@
                         <div class="fs-1">🏠</div>
                     </div>
                     <h3 class="card-title fw-bold mb-4" style="color: var(--uofg-blue);">StudyRoom</h3>
-                    <a href="#" class="btn btn-uofg px-4">view availability</a>
+                    <a href="{% url 'slot_list' 12 %}" class="btn btn-uofg px-4">view availability</a>
                 </div>
             </div>
         </div>
@@ -47,7 +47,7 @@
                         <div class="fs-1">💬</div>
                     </div>
                     <h3 class="card-title fw-bold mb-4" style="color: var(--uofg-blue);">Counseling</h3>
-                    <a href="#" class="btn btn-uofg px-4">view availability</a>
+                    <a href="{% url 'slot_list' 14 %}" class="btn btn-uofg px-4">view availability</a>
                 </div>
             </div>
         </div>
@@ -59,7 +59,7 @@
                         <div class="fs-1">🔧</div>
                     </div>
                     <h3 class="card-title fw-bold mb-4" style="color: var(--uofg-blue);">Repair</h3>
-                    <a href="#" class="btn btn-uofg px-4">view availability</a>
+                    <a href="{% url 'slot_list' 16 %}" class="btn btn-uofg px-4">view availability</a>
                 </div>
             </div>
         </div>
@@ -71,7 +71,7 @@
                         <div class="fs-1">🎓</div>
                     </div>
                     <h3 class="card-title fw-bold mb-4" style="color: var(--uofg-blue);">Tutor</h3>
-                    <a href="#" class="btn btn-uofg px-4">view availability</a>
+                    <a href="{% url 'slot_list' 17 %}" class="btn btn-uofg px-4">view availability</a>
                 </div>
             </div>
         </div>

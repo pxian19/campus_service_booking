@@ -14,4 +14,8 @@ urlpatterns = [
     path('services/', views.service_list_view, name='service_list'),
     path('services/<int:service_id>/slots/', views.slot_list_view, name='slot_list'),
     path('book/<int:slot_id>/', views.create_booking_view, name='create_booking'),
+    path('my-bookings/', views.my_bookings_view, name='my_bookings'),
+    path('cancel-booking/<int:booking_id>/', views.cancel_booking_view, name='cancel_booking'),
+    path('staff/slots/', views.staff_manage_slots_view, name='staff_manage_slots'),
+    path('staff/bookings/', views.staff_booking_list_view, name='staff_booking_list'),
 ]
