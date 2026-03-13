@@ -60,8 +60,9 @@ def logout_view(request):
 def home_view(request):
     if request.user.role == 'staff':
         return render(request, 'booking/staff_home.html')
-
-    return render(request, 'booking/student_home.html')
+    from .models import ServiceType
+    services = ServiceType.objects.all()
+    return render(request, 'booking/student_home.html', {'services': services})
 
 
 @login_required
@@ -113,3 +114,17 @@ def create_booking_view(request, slot_id):
     return render(request, 'booking/booking_confirm.html', {
         'booking': booking
     })
+    
+@login_required
+def my_bookings_view(request):
+    bookings = Booking.objects.filter(user=request.user)
+    return render(request, 'booking/my_bookings.html', {'bookings': bookings})
+
+@login_required
+def cancel_booking_view(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, user=request.user)
+    booking.time_slot.is_available = True
+    booking.time_slot.save()
+    booking.delete()
+    messages.success(request, 'Booking cancelled successfully.')
+    return redirect('my_bookings')
