@@ -76,9 +76,9 @@ WSGI_APPLICATION = 'campus_service_booking.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'campus_service',
-        'USER': 'snowsnow',
-        'PASSWORD': '',
+        'NAME': 'campus_service_booking',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
         'HOST': 'localhost',
         'PORT': '5432',
     }

@@ -1,15 +1,58 @@
-{% extends "booking/base.html" %}
+{% extends 'booking/base.html' %}
+{% load static %}
+
+{% block title %}Confirm Booking{% endblock %}
 
 {% block content %}
-<h1>Booking Confirmed</h1>
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header py-3" style="background-color: #002b5c;">
+                    <h5 class="fw-bold text-white mb-0">Confirm Your Booking</h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="mb-4">
+                        <h5 class="fw-bold">{{ slot.service.name }}</h5>
+                        <p class="text-muted small mb-1">{{ slot.service.service_type.name }} | 📍 {{ slot.service.location }}</p>
+                        <p class="mb-0">
+                            <strong>{{ slot.date|date:"l, d M Y" }}</strong>
+                            &mdash; {{ slot.start_time|time:"H:i" }} to {{ slot.end_time|time:"H:i" }}
+                        </p>
+                    </div>
 
-<p>Your booking has been created successfully.</p>
+                    <hr>
 
-<p>
-    {{ booking.time_slot.service.name }} |
-    {{ booking.time_slot.date }} |
-    {{ booking.time_slot.start_time }} - {{ booking.time_slot.end_time }}
-</p>
+                    <form method="post" action="{% url 'confirm_booking' slot.id %}">
+                        {% csrf_token %}
 
-<a href="/services/">Back to services</a>
+                        {% if slot.service.service_type.name == 'Repair' or slot.service.service_type.name == 'Counselling' or slot.service.service_type.name == 'Tutor' %}
+                        <div class="mb-4">
+                            <label class="form-label fw-bold small">
+                                {% if slot.service.service_type.name == 'Repair' %}
+                                    What do you need repaired? (required)
+                                {% elif slot.service.service_type.name == 'Counselling' %}
+                                    What would you like to discuss? (optional)
+                                {% elif slot.service.service_type.name == 'Tutor' %}
+                                    What topic do you need help with? (optional)
+                                {% endif %}
+                            </label>
+                            <textarea name="notes" class="form-control" rows="3"
+                                placeholder="{% if slot.service.service_type.name == 'Repair' %}Describe the issue and device model{% elif slot.service.service_type.name == 'Counselling' %}Briefly describe what you would like to discuss{% elif slot.service.service_type.name == 'Tutor' %}Describe the topic or question you need help with{% endif %}"
+                                {% if slot.service.service_type.name == 'Repair' %}required{% endif %}></textarea>
+                        </div>
+                        {% endif %}
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn py-2 fw-bold" style="background-color: #002b5c; color: #fff;">
+                                Confirm Booking
+                            </button>
+                            <a href="javascript:history.back()" class="btn btn-outline-secondary py-2">Go Back</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

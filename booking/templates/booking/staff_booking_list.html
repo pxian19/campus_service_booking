@@ -7,17 +7,12 @@
 <div class="container py-4">
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb small">
-            <li class="breadcrumb-item"><a href="{% url 'staff_home' %}" class="text-decoration-none">Dashboard</a></li>
-            <li class="breadcrumb-item active">{{ service.name }} Bookings</li>
+            <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none">Dashboard</a></li>
+            <li class="breadcrumb-item active">Active Bookings</li>
         </ol>
     </nav>
 
-    <div class="card border-0 shadow-sm mb-4" style="border-top: 5px solid var(--uofg-blue) !important;">
-        <div class="card-body p-4">
-            <h3 class="fw-bold mb-1" style="color: var(--uofg-blue);">Booking Overview</h3>
-            <p class="text-muted mb-0">Reviewing all reservations for <strong>{{ service.name }}</strong></p>
-        </div>
-    </div>
+    <h3 class="fw-bold mb-4" style="color: var(--uofg-blue);">Student Bookings</h3>
 
     <div class="card border-0 shadow-sm overflow-hidden">
         <div class="table-responsive">
@@ -25,38 +20,49 @@
                 <thead class="table-light">
                     <tr>
                         <th class="ps-4">Student</th>
-                        <th>Time Interval</th>
-                        <th>User Notes</th>
-                        <th class="text-end pe-4">Status</th>
+                        <th>Service</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Notes</th>
+                        <th>Status</th>
+                        <th>Booked At</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for booking in bookings %}
                     <tr>
                         <td class="ps-4">
-                            <div class="fw-bold">{{ booking.user.get_full_name }}</div>
-                            <div class="small text-muted">{{ booking.user.email }}</div>
+                            <span class="fw-medium">{{ booking.user.get_full_name }}</span>
+                            <br><small class="text-muted">{{ booking.user.email }}</small>
                         </td>
                         <td>
-                            <div>{{ booking.time_slot.start_time|date:"D, d M" }}</div>
-                            <small class="text-uofg fw-bold">{{ booking.time_slot.start_time|date:"H:i" }} - {{ booking.time_slot.end_time|date:"H:i" }}</small>
+                            {{ booking.time_slot.service.name }}
+                            <br><small class="text-muted">{{ booking.time_slot.service.location }}</small>
                         </td>
+                        <td>{{ booking.time_slot.date|date:"D, d M Y" }}</td>
+                        <td>{{ booking.time_slot.start_time|time:"H:i" }} - {{ booking.time_slot.end_time|time:"H:i" }}</td>
                         <td>
-                            <div class="small text-muted" style="max-width: 280px; font-style: italic;">
-                                "{{ booking.notes|default:"No notes provided." }}"
-                            </div>
-                        </td>
-                        <td class="text-end pe-4">
-                            {% if booking.status == 'confirmed' %}
-                                <span class="badge rounded-pill bg-success-subtle text-success border border-success px-3">Active</span>
+                            {% if booking.notes %}
+                                <small>{{ booking.notes }}</small>
                             {% else %}
-                                <span class="badge rounded-pill bg-light text-muted border px-3">Cancelled</span>
+                                <small class="text-muted">—</small>
                             {% endif %}
                         </td>
+                        <td>
+                            {% if booking.status == 'confirmed' %}
+                                <span class="badge bg-success">Confirmed</span>
+                            {% elif booking.status == 'cancelled' %}
+                                <span class="badge bg-danger">Cancelled</span>
+                                {% if booking.cancelled_at %}
+                                <br><small class="text-muted">{{ booking.cancelled_at|date:"d M H:i" }}</small>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                        <td><small class="text-muted">{{ booking.created_at|date:"d M Y H:i" }}</small></td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="4" class="text-center py-5 text-muted">No student bookings found yet.</td>
+                        <td colspan="7" class="text-center py-5 text-muted">No bookings yet.</td>
                     </tr>
                     {% endfor %}
                 </tbody>

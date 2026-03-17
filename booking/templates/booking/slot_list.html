@@ -1,17 +1,49 @@
-{% extends "booking/base.html" %}
+{% extends 'booking/base.html' %}
+{% load static %}
+
+{% block title %}Available Time Slots{% endblock %}
 
 {% block content %}
-<h1>Available Time Slots for {{ service.name }}</h1>
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+        <h2 class="fw-bold" style="color: var(--uofg-blue);">
+            Available Time Slots
+            {% if service_type %} — {{ service_type.name }}{% endif %}
+            {% if service %} — {{ service.name }}{% endif %}
+        </h2>
+        <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-sm">Back</a>
+    </div>
 
-<ul>
-{% for slot in slots %}
-<li>
-{{ slot.date }} | {{ slot.start_time }} - {{ slot.end_time }}
-<a href="/book/{{ slot.id }}/">BOOK</a>
-</li>
-{% empty %}
-<li>No slots available.</li>
-{% endfor %}
-</ul>
-
+    {% if slots %}
+    <div class="row g-3">
+        {% for slot in slots %}
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="fw-bold mb-1">{{ slot.service.name }}</h5>
+                        <p class="text-muted small mb-1">
+                            📍 {{ slot.service.location }}
+                            {% if slot.service.service_type.name == 'Counselling' or slot.service.service_type.name == 'Tutor' %}
+                                | 👤 {{ slot.service.name }}
+                            {% endif %}
+                        </p>
+                        <p class="mb-0">
+                            <strong>{{ slot.date|date:"l, d M Y" }}</strong>
+                            &mdash; {{ slot.start_time|time:"H:i" }} to {{ slot.end_time|time:"H:i" }}
+                        </p>
+                    </div>
+                    <a href="{% url 'create_booking' slot.id %}" class="btn px-4" style="background-color: #002b5c; color: #fff;">Book</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5 text-muted">
+        <p class="fs-5">No available slots at the moment.</p>
+        <a href="{% url 'home' %}" class="btn btn-outline-secondary">Back to Home</a>
+    </div>
+    {% endif %}
+</div>
 {% endblock %}

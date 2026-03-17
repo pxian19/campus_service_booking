@@ -1,0 +1,35 @@
+{% extends 'booking/base.html' %}
+{% load static %}
+
+{% block title %}Booking Confirmed{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6 text-center">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-5">
+                    <div class="mb-4">
+                        <span class="fs-1">✅</span>
+                    </div>
+                    <h3 class="fw-bold mb-3" style="color: var(--uofg-blue);">Booking Confirmed!</h3>
+                    <div class="text-start bg-light rounded p-4 mb-4">
+                        <p class="mb-1"><strong>Service:</strong> {{ booking.time_slot.service.name }}</p>
+                        <p class="mb-1"><strong>Type:</strong> {{ booking.time_slot.service.service_type.name }}</p>
+                        <p class="mb-1"><strong>Location:</strong> {{ booking.time_slot.service.location }}</p>
+                        <p class="mb-1"><strong>Date:</strong> {{ booking.time_slot.date|date:"l, d M Y" }}</p>
+                        <p class="mb-1"><strong>Time:</strong> {{ booking.time_slot.start_time|time:"H:i" }} - {{ booking.time_slot.end_time|time:"H:i" }}</p>
+                        {% if booking.notes %}
+                        <p class="mb-0"><strong>Notes:</strong> {{ booking.notes }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="{% url 'my_bookings' %}" class="btn px-4" style="background-color: #002b5c; color: #fff;">View My Bookings</a>
+                        <a href="{% url 'home' %}" class="btn btn-outline-secondary px-4">Back to Home</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -15,67 +15,19 @@
     <p class="text-muted mb-5 fs-5">Select a Service Category to Browse:</p>
 
     <div class="row g-4 justify-content-center">
-        
+        {% for st in service_types %}
         <div class="col-12 col-md-4">
-            <div class="card text-center h-100 service-category-card bg-white border-0 shadow-sm" style="border-top: 4px solid var(--uofg-blue) !important;">
+            <div class="card text-center h-100 service-category-card bg-white border-0 shadow-sm" style="border-top: 4px solid {{ st.color|default:'#002b5c' }} !important;">
                 <div class="card-body py-5">
                     <div class="d-inline-block bg-light rounded-circle p-3 mb-3">
-                        <div class="fs-1">📖</div>
+                        <div class="fs-1">{{ st.icon }}</div>
                     </div>
-                    <h3 class="card-title fw-bold mb-4" style="color: var(--uofg-blue);">Library</h3>
-                    <a href="{% url 'slot_list' 20 %}" class="btn btn-uofg px-4">view availability</a>
+                    <h3 class="card-title fw-bold mb-4" style="color: var(--uofg-blue);">{{ st.name }}</h3>
+                    <a href="{% url 'slots_by_type' st.id %}" class="btn btn-uofg px-4">view availability</a>
                 </div>
             </div>
         </div>
-
-        <div class="col-12 col-md-4">
-            <div class="card text-center h-100 service-category-card bg-white border-0 shadow-sm" style="border-top: 4px solid #cc6600 !important;">
-                <div class="card-body py-5">
-                    <div class="d-inline-block bg-light rounded-circle p-3 mb-3">
-                        <div class="fs-1">🏠</div>
-                    </div>
-                    <h3 class="card-title fw-bold mb-4" style="color: var(--uofg-blue);">StudyRoom</h3>
-                    <a href="{% url 'slot_list' 22 %}" class="btn btn-uofg px-4">view availability</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-md-4">
-            <div class="card text-center h-100 service-category-card bg-white border-0 shadow-sm" style="border-top: 4px solid #005c5a !important;">
-                <div class="card-body py-5">
-                    <div class="d-inline-block bg-light rounded-circle p-3 mb-3">
-                        <div class="fs-1">💬</div>
-                    </div>
-                    <h3 class="card-title fw-bold mb-4" style="color: var(--uofg-blue);">Counseling</h3>
-                    <a href="{% url 'slot_list' 24 %}" class="btn btn-uofg px-4">view availability</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-md-4">
-            <div class="card text-center h-100 service-category-card bg-white border-0 shadow-sm" style="border-top: 4px solid #5a6b7c !important;">
-                <div class="card-body py-5">
-                    <div class="d-inline-block bg-light rounded-circle p-3 mb-3">
-                        <div class="fs-1">🔧</div>
-                    </div>
-                    <h3 class="card-title fw-bold mb-4" style="color: var(--uofg-blue);">Repair</h3>
-                    <a href="{% url 'slot_list' 26 %}" class="btn btn-uofg px-4">view availability</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-md-4">
-            <div class="card text-center h-100 service-category-card bg-white border-0 shadow-sm" style="border-top: 4px solid #5d3b6d !important;">
-                <div class="card-body py-5">
-                    <div class="d-inline-block bg-light rounded-circle p-3 mb-3">
-                        <div class="fs-1">🎓</div>
-                    </div>
-                    <h3 class="card-title fw-bold mb-4" style="color: var(--uofg-blue);">Tutor</h3>
-                    <a href="{% url 'slot_list' 27 %}" class="btn btn-uofg px-4">view availability</a>
-                </div>
-            </div>
-        </div>
-
+        {% endfor %}
     </div>
 </div>
 
@@ -96,11 +48,11 @@
         color: white !important;
         border: none;
         padding: 8px 20px;
-        text-transform: lowercase; 
+        text-transform: lowercase;
         transition: background-color 0.2s;
     }
     .btn-uofg:hover {
-        background-color: #001f44; 
+        background-color: #001f44;
     }
 </style>
 {% endblock %}
