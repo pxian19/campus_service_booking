@@ -157,7 +157,7 @@ def staff_manage_slots_view(request):
     else:
         form = TimeSlotForm()
 
-    return render(request, 'booking/staff_manage_slots_a.html', {
+    return render(request, 'manage_slots.html', {
         'form': form,
         'slots': slots,
     })
@@ -171,6 +171,6 @@ def staff_booking_list_view(request):
 
     bookings = Booking.objects.all().order_by('-created_at')
 
-    return render(request, 'booking/staff_booking_list_a.html', {
+    return render(request, 'booking/staff_booking_list.html', {
         'bookings': bookings,
     })
