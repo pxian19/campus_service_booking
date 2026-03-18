@@ -43,15 +43,19 @@
                         <p class="text-muted small mb-0">{{ service.service_type.name }} | {{ service.location }}</p>
                     </div>
                     <div class="d-flex gap-2">
-                        <a href="{% url 'staff_booking_list' service.id %}" class="btn btn-uofg btn-sm px-4">View Bookings</a>
-                        <a href="{% url 'manage_slots' service.id %}" class="btn btn-outline-primary btn-sm px-4">Manage Slots</a>
+                        <a href="{% url 'staff_booking_list' %}" class="btn btn-sm px-4" style="background-color: #002b5c; color: #ffffff;">View Bookings</a>
+                        <a href="{% url 'staff_manage_slots' %}" class="btn btn-outline-primary btn-sm px-4">Manage Slots</a>
+                    </div>
                     </div>
                 </div>
             </div>
         </div>
+       
         {% empty %}
         <div class="col-12 text-center py-5">
-            <p class="text-muted">No services assigned to your account yet.</p>
+            <p class="text-muted mb-4">No specific services assigned yet, but you can manage global settings here:</p>
+            <a href="{% url 'staff_manage_slots' %}" class="btn btn-outline-primary px-4 me-3">Manage All Slots</a>
+            <a href="{% url 'staff_booking_list' %}" class="btn px-4" style="background-color: #002b5c; color: #ffffff;">View All Bookings</a>
         </div>
         {% endfor %}
     </div>

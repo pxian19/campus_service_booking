@@ -60,9 +60,8 @@ def logout_view(request):
 def home_view(request):
     if request.user.role == 'staff':
         return render(request, 'booking/staff_home.html')
-    from .models import ServiceType
-    services = ServiceType.objects.all()
-    return render(request, 'booking/student_home.html', {'services': services})
+
+    return render(request, 'booking/student_home.html')
 
 
 @login_required
@@ -114,17 +113,64 @@ def create_booking_view(request, slot_id):
     return render(request, 'booking/booking_confirm.html', {
         'booking': booking
     })
-    
 @login_required
 def my_bookings_view(request):
-    bookings = Booking.objects.filter(user=request.user)
-    return render(request, 'booking/my_bookings.html', {'bookings': bookings})
-
+    bookings = Booking.objects.filter(user=request.user).order_by('-id')
+    return render(request, 'booking/my_bookings.html', {
+        'bookings': bookings
+    })
 @login_required
 def cancel_booking_view(request, booking_id):
+
+    if request.method != 'POST':
+        return redirect('my_bookings')
+
     booking = get_object_or_404(Booking, id=booking_id, user=request.user)
-    booking.time_slot.is_available = True
-    booking.time_slot.save()
-    booking.delete()
-    messages.success(request, 'Booking cancelled successfully.')
+
+    if booking.status == 'confirmed':
+        booking.status = 'cancelled'
+        booking.save()
+
+        slot = booking.time_slot
+        slot.is_available = True
+        slot.save()
+
+        messages.success(request, 'Booking cancelled successfully.')
+
     return redirect('my_bookings')
+@login_required
+def staff_manage_slots_view(request):
+    if request.user.role != 'staff':
+        messages.error(request, 'Access denied.')
+        return redirect('home')
+
+    slots = TimeSlot.objects.all().order_by('date', 'start_time')
+
+    if request.method == 'POST':
+        form = TimeSlotForm(request.POST)
+        if form.is_valid():
+            slot = form.save(commit=False)
+            slot.created_by_staff = request.user
+            slot.save()
+            messages.success(request, 'Time slot created successfully.')
+            return redirect('staff_manage_slots')
+    else:
+        form = TimeSlotForm()
+
+    return render(request, 'manage_slots.html', {
+        'form': form,
+        'slots': slots,
+    })
+
+
+@login_required
+def staff_booking_list_view(request):
+    if request.user.role != 'staff':
+        messages.error(request, 'Access denied.')
+        return redirect('home')
+
+    bookings = Booking.objects.all().order_by('-created_at')
+
+    return render(request, 'booking/staff_booking_list.html', {
+        'bookings': bookings,
+    })
