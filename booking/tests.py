@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from .models import User, ServiceType, Service, TimeSlot, Booking
-from datetime import date, time
+from datetime import date, time,timedelta
 
 
 # Test User model and email validation
@@ -206,3 +206,121 @@ class LoginTest(TestCase):
             'password': 'WrongPass!',
         })
         self.assertEqual(response.status_code, 200)
+class PermissionTest(TestCase):
+    def setUp(self):
+        self.student = User.objects.create_user(
+            username='permstudent',
+            email='perm@student.gla.ac.uk',
+            password='TestPass123!',
+            first_name='Perm',
+            last_name='Student',
+            role='student',
+        )
+
+        self.staff = User.objects.create_user(
+            username='permstaff',
+            email='perm@gla.ac.uk',
+            password='TestPass123!',
+            first_name='Perm',
+            last_name='Staff',
+            role='staff',
+        )
+
+    def test_home_requires_login(self):
+        response = self.client.get(reverse('home'))
+        self.assertEqual(response.status_code, 302)
+
+    def test_student_can_access_home(self):
+        self.client.force_login(self.student)
+        response = self.client.get(reverse('home'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_staff_can_access_home(self):
+        self.client.force_login(self.staff)
+        response = self.client.get(reverse('home'))
+        self.assertEqual(response.status_code, 200)
+class ViewTest(TestCase):
+    def setUp(self):
+        self.student = User.objects.create_user(
+            username='viewstudent',
+            email='view@student.gla.ac.uk',
+            password='TestPass123!',
+            first_name='View',
+            last_name='Student',
+            role='student',
+        )
+
+        self.staff = User.objects.create_user(
+            username='viewstaff',
+            email='view@gla.ac.uk',
+            password='TestPass123!',
+            first_name='View',
+            last_name='Staff',
+            role='staff',
+        )
+
+        self.service_type = ServiceType.objects.create(name='Library')
+        self.service = Service.objects.create(
+            service_type=self.service_type,
+            name='Library A1',
+            location='Main Library',
+            is_active=True,
+        )
+
+        self.slot = TimeSlot.objects.create(
+            service=self.service,
+            date=date(2026, 3, 10),
+            start_time=time(10, 0),
+            end_time=time(10, 30),
+        )
+
+    def test_service_list_view(self):
+        self.client.force_login(self.student)
+        response = self.client.get(reverse('service_list'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Library A1')
+
+    def test_slot_list_view(self):
+        self.client.force_login(self.student)
+        response = self.client.get(reverse('slot_list', args=[self.service.id]))
+        self.assertEqual(response.status_code, 200)
+
+    def test_create_booking_page_loads(self):
+       self.client.force_login(self.student)
+       response = self.client.get(reverse('create_booking', args=[self.slot.id]))
+       self.assertEqual(response.status_code, 200)
+    def test_confirm_booking_view(self):
+       self.client.force_login(self.student)
+       response = self.client.post(reverse('confirm_booking', args=[self.slot.id]), {})
+       self.assertIn(response.status_code, [200, 302])
+       self.assertEqual(
+        Booking.objects.filter(user=self.student, time_slot=self.slot).count(), 1
+    )
+
+       self.slot.refresh_from_db()
+       self.assertFalse(self.slot.is_available)
+    def test_cancel_booking_view(self):
+        cancel_slot = TimeSlot.objects.create(
+           service=self.service,
+           date=date.today() + timedelta(days=3),
+           start_time=time(15, 0),
+           end_time=time(15, 30),
+           is_available=False,
+    )
+
+        booking = Booking.objects.create(
+           user=self.student,
+           time_slot=cancel_slot,
+           status='confirmed'
+    )
+
+        self.client.force_login(self.student)
+        response = self.client.post(reverse('cancel_booking', args=[booking.id]))
+
+        self.assertEqual(response.status_code, 302)
+
+        booking.refresh_from_db()
+        self.assertEqual(booking.status, 'cancelled')
+ 
+        cancel_slot.refresh_from_db()
+        self.assertTrue(cancel_slot.is_available)
